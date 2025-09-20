@@ -1,0 +1,871 @@
+C
+<!doctype html>
+<html lang="so">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dugsiga Sheekh Cumar — Full Single File App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --accent:#5eead4; --muted:#94a3b8;
+      --glass: rgba(255,255,255,0.04); --glass2: rgba(255,255,255,0.03); --glass-strong: rgba(255,255,255,0.06);
+    }
+    *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;}
+    html,body{height:100%;margin:0;background:
+      radial-gradient(1200px 400px at 10% 10%, rgba(94,234,212,0.06), transparent),
+      radial-gradient(800px 300px at 90% 90%, rgba(99,102,241,0.06), transparent),
+      var(--bg); color:#e6eef8;}
+    a{color:var(--accent);text-decoration:none}
+    header{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{ width:48px;height:48px;border-radius:10px; background:linear-gradient(135deg,#06b6d4,#7c3aed);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff; box-shadow:0 6px 20px rgba(0,0,0,0.6); }
+    nav{display:flex;gap:12px;align-items:center}
+    .nav-link{background:transparent;border:none;color:#cbd5e1;padding:8px 12px;border-radius:8px;cursor:pointer}
+    .nav-link.active{background:#60a5fa;color:#0f172a;font-weight:700}
+    .btn{ background:linear-gradient(90deg,#60a5fa,#7c3aed); padding:8px 12px;border-radius:8px;border:none;color:white;font-weight:600;cursor:pointer }
+    .ghost{background:transparent;border:1px solid var(--glass-strong);padding:8px 12px;border-radius:10px;color:var(--muted)}
+    .container{max-width:1100px;margin:20px auto;padding:16px}
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:20px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:12px;padding:14px;border:1px solid var(--glass);box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+    .small{font-size:13px;color:var(--muted)}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:8px;text-align:left;border-bottom:1px dashed rgba(255,255,255,0.02);font-size:14px;color:#d9e9f6}
+    .pill{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.03);font-size:13px;cursor:pointer}
+    footer{opacity:0.9;color:var(--muted);padding:18px;text-align:center}
+    .profile{display:flex;align-items:center;gap:10px}
+    .avatar{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,#06b6d4,#7c3aed);display:flex;align-items:center;justify-content:center;font-weight:700;color:#04263b;overflow:hidden}
+    .avatar img{width:100%;height:100%;object-fit:cover}
+    .modal-bg{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;padding:20px;z-index:60}
+    .modal{width:100%;max-width:540px;background:linear-gradient(180deg, #071028, #071726);border-radius:12px;padding:18px;border:1px solid var(--glass)}
+    input,select,textarea{background:transparent;border:1px solid var(--glass-strong);padding:10px;border-radius:8px;color:inherit;outline:none;width:100%}
+    .flex{display:flex;gap:8px;align-items:center}
+    .text-right{display:flex;justify-content:flex-end}
+    .chat-box{height:160px;overflow:auto;padding:10px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid var(--glass2)}
+    @media (max-width:900px){ .grid{grid-template-columns:1fr} nav{display:none} }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">QS</div>
+    <div>
+      <div style="font-weight:700">Dugsiga Sheekh Cumar</div>
+      <div class="small">System demo — localStorage</div>
+    </div>
+  </div>
+
+  <nav id="mainNav">
+    <a href="cccc.html">Home</a>
+    <a href="studnets.html" data-page="students">Students</a>
+    <a href="cade.html" data-page="Teachers">teachers</button>
+    <button class="nav-link" data-page="about">About</button>
+    <button class="nav-link" data-page="contact">Contact</button>
+  </nav>
+
+  <div class="profile">
+    <div class="avatar" id="headerAvatar"><img src="" alt=""/></div>
+    <div>
+      <div id="headerName" style="font-weight:700">Guest</div>
+      <div class="small" id="headerRole">Visitor</div>
+    </div>
+    <div style="margin-left:10px">
+      <button class="ghost" id="openAuthBtn">Login / Sign up</button>
+      <button class="btn" id="openProfileBtn">Profile</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="grid">
+    <div>
+      <div class="card" id="homePage">
+        <h2>Ku soo dhowow Dugsiga Sheekh Cumar</h2>
+        <p class="small">System demo oo hal file ah — login, admin, students, teachers, chat, profile.</p>
+
+        <div style="margin-top:12px" class="flex">
+          <button class="btn" id="startBtn">Galka Dashboard</button>
+          <button class="ghost" id="seedBtn">Seed Students</button>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-weight:700">Live Chat</div>
+              <div class="small">Fariimaha waxaa lagu kaydiyaa browser</div>
+            </div>
+            <div class="small">Online: <span id="onlineCount">0</span></div>
+          </div>
+          <div style="margin-top:10px">
+            <div class="chat-box" id="globalChatBox"></div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <input id="globalChatInput" placeholder="Qor fariin..." />
+              <button class="btn" id="globalChatSend">Send</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Students Page -->
+      <div class="card hidden" id="studentsPage" style="margin-top:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:700">Students</div>
+            <div class="small">Liiska ardayda — admin ayaa ku dari kara ka tiriri kara</div>
+          </div>
+          <div>
+            <input id="searchStudent" placeholder="Search name or ID" />
+            <button class="ghost" id="addStudentBtn">Add</button>
+          </div>
+        </div>
+
+        <div style="margin-top:12px" class="card" id="studentsTableCard">
+          <table id="studentsTable">
+            <thead><tr><th>#</th><th>ID</th><th>Name</th><th>Class</th><th>Present</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Teachers Page -->
+      <div class="card hidden" id="teachersPage" style="margin-top:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:700">Teachers</div>
+            <div class="small">Liiska macalimiinta — admin controls</div>
+          </div>
+          <div>
+            <button class="ghost" id="addTeacherBtn">Add Teacher</button>
+          </div>
+        </div>
+
+        <div style="margin-top:12px" class="card" id="teachersTableCard">
+          <table id="teachersTable">
+            <thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Code</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- About -->
+      <div class="card hidden" id="aboutPage" style="margin-top:16px">
+        <h3>About</h3>
+        <p class="small">Tani waa demo — xogta waxaa lagu keydiyaa browser (localStorage).</p>
+      </div>
+
+      <!-- Contact -->
+      <div class="card hidden" id="contactPage" style="margin-top:16px">
+        <h3>Contact</h3>
+        <p class="small">WhatsApp: <a href="https://wa.me/252637185409" target="_blank">+252 63 7185409</a></p>
+      </div>
+
+    </div>
+
+    <!-- Right column -->
+    <aside>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="small">Account</div>
+            <div id="sideName" style="font-weight:700">Guest</div>
+            <div class="small" id="sideRole">Visitor</div>
+          </div>
+          <div>
+            <div class="avatar" id="sideAvatar"><img src="" alt=""></div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="small">Quick Links</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+            <button class="pill" data-page="home">Home</button>
+            <button class="pill" data-page="students">Students</button>
+            <button class="pill" data-page="teachers">Teachers</button>
+            <button class="pill" id="openAuthSmall">Login / Signup</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="card">
+        <div style="font-weight:700">Admin Panel</div>
+        <div class="small">Login as admin (username: <strong>admin</strong>, password: <strong>1234</strong>)</div>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button class="btn" id="openAdminLogin">Admin Login</button>
+          <button class="ghost" id="openStats">Stats</button>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+</main>
+
+<footer>© <span id="year"></span> Dugsiga Sheekh Cumar — Demo (Local)</footer>
+
+<!-- ===== MODALS ===== -->
+
+<!-- AUTH MODAL -->
+<div class="modal-bg" id="authModal">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-weight:700">Login / Sign up</div>
+      <div class="small">Demo: stored in browser</div>
+    </div>
+
+    <div style="height:12px"></div>
+
+    <div style="display:flex;gap:14px">
+      <div style="flex:1">
+        <form id="loginForm">
+          <label class="small">Select user (or type your name)</label>
+          <select id="loginSelect"></select>
+          <input id="loginPass" placeholder="Password or teacher code" />
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+            <button type="button" class="ghost" id="showSignupBtn">Sign up</button>
+            <button type="button" class="btn" id="doLogin">Login</button>
+          </div>
+        </form>
+      </div>
+
+      <div style="width:1px;background:var(--glass-strong)"></div>
+
+      <div style="width:300px">
+        <form id="signupForm" style="display:block">
+          <label class="small">Name</label>
+          <input id="suName" placeholder="Full name (3 words)" />
+          <label class="small">Phone</label>
+          <input id="suPhone" placeholder="Phone number" />
+          <label class="small">Password</label>
+          <input id="suPass" placeholder="Password" />
+          <label class="small">Avatar (optional)</label>
+          <input id="suAvatar" type="file" accept="image/*" />
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+            <button type="button" class="ghost" id="cancelSignup">Cancel</button>
+            <button type="button" class="btn" id="doSignup">Sign up</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div style="height:10px"></div>
+    <div style="display:flex;justify-content:flex-end">
+      <button class="ghost" id="closeAuth">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Login -->
+<div class="modal-bg" id="adminModal">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-weight:700">Admin Login</div>
+      <div class="small">Username: <strong>admin</strong> | Password: <strong>1234</strong></div>
+    </div>
+    <div style="height:8px"></div>
+    <input id="adminUser" placeholder="Username" />
+    <input id="adminPass" placeholder="Password" type="password" />
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px">
+      <button class="ghost" id="cancelAdmin">Cancel</button>
+      <button class="btn" id="doAdminLogin">Sign in</button>
+    </div>
+    <div id="adminErr" class="small" style="color:#fb7185;margin-top:8px;display:none">Wrong credentials</div>
+  </div>
+</div>
+
+<!-- Profile Modal -->
+<div class="modal-bg" id="profileModal">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-weight:700">Profile</div>
+      <div class="small" id="profileRoleLabel"></div>
+    </div>
+    <div style="height:8px"></div>
+    <label class="small">Name</label>
+    <input id="pfName" />
+    <label class="small">Email / Phone</label>
+    <input id="pfEmail" />
+    <label class="small">Avatar</label>
+    <input id="pfAvatarFile" type="file" accept="image/*" />
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px">
+      <button class="ghost" id="cancelProfile">Cancel</button>
+      <button class="btn" id="saveProfile">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Student Modal -->
+<div class="modal-bg" id="addStudentModal">
+  <div class="modal">
+    <div style="font-weight:700">Add Student</div>
+    <div style="height:8px"></div>
+    <label class="small">ID</label><input id="m_stId" />
+    <label class="small">Name</label><input id="m_stName" />
+    <label class="small">Class</label>
+    <select id="m_stClass">
+      <option value="">-- Select class --</option>
+      <option>1A</option><option>1B</option><option>2A</option><option>2B</option>
+      <option>3A</option><option>3B</option><option>4A</option><option>4B</option>
+      <option>5A</option><option>5B</option><option>6A</option><option>6B</option>
+      <option>7A</option><option>7B</option><option>8A</option><option>8B</option>
+    </select>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px">
+      <button class="ghost" id="cancelAddStudent">Cancel</button>
+      <button class="btn" id="doAddStudent">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Teacher Modal -->
+<div class="modal-bg" id="addTeacherModal">
+  <div class="modal">
+    <div style="font-weight:700">Add Teacher</div>
+    <div style="height:8px"></div>
+    <label class="small">Name</label><input id="m_tName" />
+    <label class="small">Phone</label><input id="m_tPhone" />
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px">
+      <button class="ghost" id="cancelAddTeacher">Cancel</button>
+      <button class="btn" id="doAddTeacher">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- Stats Modal -->
+<div class="modal-bg" id="statsModal">
+  <div class="modal">
+    <div style="font-weight:700">Stats</div>
+    <div style="display:flex;gap:16px;margin-top:12px">
+      <div><div id="st_total" style="font-weight:700">0</div><div class="small">Students</div></div>
+      <div><div id="st_teachers" style="font-weight:700">0</div><div class="small">Teachers</div></div>
+      <div><div id="st_users" style="font-weight:700">0</div><div class="small">Users</div></div>
+    </div>
+    <div style="height:10px"></div>
+    <div style="display:flex;justify-content:flex-end"><button class="ghost" id="closeStats">Close</button></div>
+  </div>
+</div>
+
+<script>
+/* =========================
+   LocalStorage keys & defaults
+   ========================= */
+const LS_USERS = 'app_users_v1';
+const LS_CURRENT = 'app_current_v1';
+const LS_STUDENTS = 'app_students_v1';
+const LS_TEACHERS = 'app_teachers_v1';
+const LS_CHAT = 'app_chat_v1';
+const LS_ONLINE = 'app_online_v1';
+const YEAR_EL = document.getElementById('year'); YEAR_EL.textContent = new Date().getFullYear();
+
+/* ===== default admin (only created once) ===== */
+const DEFAULT_ADMIN = {
+  username: 'admin',
+  fullname: 'Admin User',
+  phone: '0000',
+  password: '1234',
+  role: 'admin',
+  avatar: 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='100%' height='100%' fill='#60a5fa'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='44' fill='white'>AD</text></svg>`)
+};
+
+function getLS(k, fallback){ try{ return JSON.parse(localStorage.getItem(k)) || fallback; }catch(e){ return fallback; } }
+function setLS(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
+
+/* ensure admin exists */
+(function ensureAdmin(){
+  const users = getLS(LS_USERS, []);
+  if(!users.find(u=>u.role==='admin' && u.username===DEFAULT_ADMIN.username)){
+    users.push(DEFAULT_ADMIN);
+    setLS(LS_USERS, users);
+  }
+})();
+
+/* =========================
+   Data initialisation
+   ========================= */
+let users = getLS(LS_USERS, []);
+let currentUser = getLS(LS_CURRENT, null);
+let students = getLS(LS_STUDENTS, []);
+let teachers = getLS(LS_TEACHERS, [
+  // initial teacher list sample (you can edit)
+  {name:'Abdiraxmaan Boss', phone:'+252634471852'},
+  {name:'Nimcaan Abdi', phone:'3164595'},
+  {name:'Fadxi Yaxye', phone:'4088639'}
+]);
+let chat = getLS(LS_CHAT, []);
+let online = getLS(LS_ONLINE, []); // array of usernames currently online (multi-tab sharing)
+
+/* =========================
+   Utility helpers
+   ========================= */
+function $(id){ return document.getElementById(id); }
+function openModal(id){ $(id).style.display = 'flex'; }
+function closeModal(id){ $(id).style.display = 'none'; }
+function toast(msg){ alert(msg); }
+
+/* =========================
+   UI wiring & render
+   ========================= */
+
+// Nav handling
+document.querySelectorAll('.nav-link').forEach(btn=>{
+  btn.addEventListener('click', ()=> {
+    document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const page = btn.dataset.page;
+    ['home','students','teachers','about','contact'].forEach(p=>{
+      const el = document.getElementById(p+'Page') || document.getElementById(p+'Page'); // some pages named differently earlier
+    });
+    // hide/show content blocks
+    const mapping = {
+      home: 'homePage',
+      students: 'studentsPage',
+      teachers: 'teachersPage',
+      about: 'aboutPage',
+      contact: 'contactPage'
+    };
+    Object.values(mapping).forEach(id => { const el=document.getElementById(id); if(el) el.classList.add('hidden'); });
+    const showId = mapping[page];
+    if(showId){ const el=document.getElementById(showId); if(el) el.classList.remove('hidden'); }
+  });
+});
+
+// quick link buttons on right column
+document.querySelectorAll('button.pill[data-page]').forEach(b=>{
+  b.addEventListener('click', ()=> {
+    const page = b.dataset.page;
+    document.querySelectorAll('.nav-link').forEach(n=> n.classList.remove('active'));
+    document.querySelector(`.nav-link[data-page="${page}"]`).classList.add('active');
+    // trigger nav click
+    document.querySelector(`.nav-link[data-page="${page}"]`).click();
+  });
+});
+
+// header buttons
+$('openAuthBtn').addEventListener('click', ()=> openAuthModal());
+$('openAuthSmall').addEventListener('click', ()=> openAuthModal());
+$('openProfileBtn').addEventListener('click', ()=> openProfileModal());
+$('startBtn').addEventListener('click', ()=> { document.querySelector('.nav-link[data-page="students"]').click(); });
+$('seedBtn').addEventListener('click', ()=> seedStudents(5));
+
+/* ===== AUTH modal wiring ===== */
+function openAuthModal(){
+  refreshLoginSelect();
+  openModal('authModal');
+}
+$('closeAuth').addEventListener('click', ()=> closeModal('authModal'));
+$('showSignupBtn').addEventListener('click', ()=> {
+  $('loginForm').style.display='none';
+  $('signupForm').style.display='block';
+});
+$('cancelSignup').addEventListener('click', ()=> {
+  $('signupForm').style.display='block';
+  $('loginForm').style.display='block';
+  closeModal('authModal');
+});
+$('doSignup').addEventListener('click', doSignup);
+$('doLogin').addEventListener('click', doLogin);
+
+function refreshLoginSelect(){
+  // populate select with users and teachers
+  const sel = $('loginSelect'); sel.innerHTML = '';
+  const optUser = document.createElement('option'); optUser.value=''; optUser.textContent='-- Select user or teacher --'; sel.appendChild(optUser);
+  users.forEach(u=>{
+    const o = document.createElement('option'); o.value = u.username || u.fullname || u.phone || u.email; o.textContent = `${u.fullname || u.username} (${u.role||'user'})`; sel.appendChild(o);
+  });
+  teachers.forEach(t=>{
+    const o = document.createElement('option'); o.value = 'T::' + t.name; o.textContent = `${t.name} — teacher (${teacherCode(t.phone)})`; sel.appendChild(o);
+  });
+}
+
+// Signup: read file to DataURL if present
+function doSignup(){
+  const name = $('suName').value.trim();
+  const phone = $('suPhone').value.trim();
+  const pass = $('suPass').value.trim();
+  const file = $('suAvatar').files[0];
+  if(!name || !phone || !pass) return toast('Fadlan buuxi dhammaan fields-ka');
+  const username = name.replace(/\s+/g,'_').toLowerCase() + '_' + Date.now();
+  if(file){
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const avatar = e.target.result;
+      saveNewUser(username, name, phone, pass, avatar);
+    };
+    reader.readAsDataURL(file);
+  } else {
+    saveNewUser(username, name, phone, pass, null);
+  }
+}
+function saveNewUser(username, name, phone, pass, avatar){
+  users.push({ username, fullname: name, phone, password: pass, role:'user', avatar });
+  setLS(LS_USERS, users);
+  toast('Registered. Fadlan login hadda.');
+  // refresh
+  $('suName').value=''; $('suPhone').value=''; $('suPass').value=''; $('suAvatar').value='';
+  refreshLoginSelect();
+  $('loginSelect').value = username;
+  $('loginPass').value = pass;
+  // auto-login
+  doLogin();
+}
+
+// Login logic: check teacher code or user/pass or admin
+function teacherCode(phone){
+  const nums = (phone||'').replace(/[^0-9]/g,'');
+  return nums.slice(0,4);
+}
+function doLogin(){
+  const selVal = $('loginSelect').value;
+  const pass = $('loginPass').value.trim();
+
+  // teacher login if selected teacher option (marked with 'T::')
+  if(selVal && selVal.startsWith('T::')){
+    const tname = selVal.slice(3);
+    const t = teachers.find(x=>x.name===tname);
+    if(!t) return toast('Teacher not found');
+    if(pass === teacherCode(t.phone)){
+      // login teacher
+      currentUser = { username: 'teacher_'+tname.replace(/\s+/g,'_'), fullname: t.name, phone: t.phone, role:'teacher', avatar: null };
+      setLS(LS_CURRENT, currentUser);
+      pushOnline(currentUser.username);
+      applyUserToUI();
+      closeModal('authModal');
+      toast('Macallin: ' + t.name + ' — Ku soo dhawoow');
+      return;
+    } else return toast('Code khalad ah');
+  }
+
+  // admin login (username 'admin')
+  const admin = users.find(u=>u.role==='admin' && (u.username==='admin' || u.username===selVal));
+  if(admin && pass === admin.password){
+    currentUser = admin;
+    setLS(LS_CURRENT, currentUser);
+    pushOnline(currentUser.username);
+    applyUserToUI();
+    closeModal('authModal');
+    toast('Admin logged in');
+    return;
+  }
+
+  // normal user login by username/fullname or phone/email
+  const u = users.find(u=>{
+    const key = selVal || u.username || u.fullname || u.phone;
+    // allow selecting empty then typing name into select? we require selection or matching key
+    return (selVal && (u.username===selVal || u.fullname===selVal || u.phone===selVal || u.email===selVal)) && (u.password === pass);
+  });
+
+  if(u){
+    currentUser = u; setLS(LS_CURRENT, currentUser); pushOnline(currentUser.username); applyUserToUI(); closeModal('authModal'); toast('Ku soo dhawoow ' + u.fullname); return;
+  }
+
+  // fallback: try match by name typed manually
+  if(!selVal){
+    const typedName = $('loginPass').value.trim(); // not ideal but keep simple
+  }
+
+  toast('Login failed — hubi username iyo password');
+}
+
+/* =========================
+   Profile modal
+   ========================= */
+$('openProfileBtn').addEventListener('click', openProfileModal);
+$('cancelProfile').addEventListener('click', ()=> closeModal('profileModal'));
+$('saveProfile').addEventListener('click', saveProfile);
+
+function openProfileModal(){
+  const cur = getLS(LS_CURRENT, null);
+  if(!cur){ openAuthModal(); return; }
+  $('pfName').value = cur.fullname || cur.username || '';
+  $('pfEmail').value = cur.phone || cur.email || '';
+  $('profileRoleLabel').textContent = cur.role ? cur.role.toUpperCase() : 'USER';
+  openModal('profileModal');
+}
+function saveProfile(){
+  const cur = getLS(LS_CURRENT, null);
+  if(!cur) return toast('No user logged in');
+  const name = $('pfName').value.trim();
+  const email = $('pfEmail').value.trim();
+  const file = $('pfAvatarFile').files[0];
+  if(file){
+    const reader = new FileReader();
+    reader.onload = function(e){
+      cur.avatar = e.target.result;
+      cur.fullname = name; cur.phone = email;
+      persistCurrentUser(cur);
+    };
+    reader.readAsDataURL(file);
+  } else {
+    cur.fullname = name; cur.phone = email;
+    persistCurrentUser(cur);
+  }
+}
+function persistCurrentUser(userObj){
+  // update in users list if exists (except teacher entries)
+  const idx = users.findIndex(u => u.username === userObj.username || u.phone === userObj.phone);
+  if(idx >= 0){ users[idx] = userObj; setLS(LS_USERS, users); }
+  setLS(LS_CURRENT, userObj);
+  currentUser = userObj;
+  applyUserToUI();
+  closeModal('profileModal');
+  toast('Profile saved');
+}
+
+/* =========================
+   Students render & CRUD
+   ========================= */
+function renderStudents(filter){
+  const tbody = document.querySelector('#studentsTable tbody');
+  tbody.innerHTML = '';
+  const list = !filter ? students : students.filter(s => s.name.toLowerCase().includes(filter) || (s.id||'').toLowerCase().includes(filter));
+  list.forEach((s,i)=>{
+    const tr = document.createElement('tr');
+    const idx = students.indexOf(s);
+    tr.innerHTML = `
+      <td>${idx+1}</td>
+      <td>${s.id||''}</td>
+      <td>${s.name}</td>
+      <td>${s.class||''}</td>
+      <td><input type="checkbox" ${s.present?'checked':''} data-idx="${idx}" class="presentToggle"></td>
+      <td>
+        <button class="pill viewBtn" data-idx="${idx}">View</button>
+        ${currentUser && currentUser.role==='admin' ? `<button class="pill editBtn" data-idx="${idx}">Edit</button><button class="pill delBtn" data-idx="${idx}" style="background:transparent;border:1px solid rgba(255,0,0,0.06)">Del</button>` : ''}
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // attach handlers
+  tbody.querySelectorAll('.presentToggle').forEach(ch=>{
+    ch.addEventListener('change', (e)=>{
+      const i = Number(e.target.dataset.idx); students[i].present = e.target.checked; setLS(LS_STUDENTS, students); updateOnlineStat(); renderStudents();
+    });
+  });
+  tbody.querySelectorAll('.viewBtn').forEach(b=> b.addEventListener('click', ()=> {
+    const i = Number(b.dataset.idx); const s = students[i];
+    alert(`${s.name}\nID: ${s.id}\nClass: ${s.class}\nPresent: ${s.present ? 'Yes':'No'}`);
+  }));
+  tbody.querySelectorAll('.editBtn').forEach(b=> b.addEventListener('click', ()=> {
+    const i = Number(b.dataset.idx);
+    const s = students[i];
+    const nid = prompt('Edit ID', s.id) || s.id;
+    const nname = prompt('Edit name', s.name) || s.name;
+    const nclass = prompt('Edit class (e.g., 1A)', s.class) || s.class;
+    s.id = nid; s.name = nname; s.class = nclass;
+    setLS(LS_STUDENTS, students); renderStudents();
+  }));
+  tbody.querySelectorAll('.delBtn').forEach(b=> b.addEventListener('click', ()=> {
+    const i = Number(b.dataset.idx);
+    if(confirm('Miyaad hubtaa inaad tirtirayso?')){ students.splice(i,1); setLS(LS_STUDENTS, students); renderStudents(); }
+  }));
+
+  updateStatsDisplay();
+}
+$('searchStudent').addEventListener('input', ()=> renderStudents($('searchStudent').value.toLowerCase()));
+$('addStudentBtn').addEventListener('click', ()=> {
+  if(!currentUser || currentUser.role!=='admin'){ return toast('Only admin can add students'); }
+  $('m_stId').value=''; $('m_stName').value=''; $('m_stClass').value='';
+  openModal('addStudentModal');
+});
+$('cancelAddStudent').addEventListener('click', ()=> closeModal('addStudentModal'));
+$('doAddStudent').addEventListener('click', ()=> {
+  const id = $('m_stId').value.trim(); const name = $('m_stName').value.trim(); const cls = $('m_stClass').value;
+  if(!id || !name) return toast('ID and Name required');
+  students.unshift({id, name, class: cls, present:false});
+  setLS(LS_STUDENTS, students); closeModal('addStudentModal'); renderStudents(); toast('Student added');
+});
+
+/* =========================
+   Teachers render & CRUD
+   ========================= */
+function renderTeachers(){
+  const tbody = document.querySelector('#teachersTable tbody'); tbody.innerHTML='';
+  teachers.forEach((t,i)=>{
+    const code = teacherCode(t.phone);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${i+1}</td><td>${t.name}</td><td>${t.phone}</td><td>${code}</td>
+      <td>${currentUser && currentUser.role==='admin' ? `<button class="pill tDel" data-i="${i}">Del</button>` : ''}</td>`;
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll('.tDel').forEach(b=> b.addEventListener('click', ()=>{
+    if(!confirm('Delete teacher?')) return;
+    const i = Number(b.dataset.i); teachers.splice(i,1); setLS(LS_TEACHERS, teachers); renderTeachers();
+  }));
+}
+$('addTeacherBtn').addEventListener('click', ()=> {
+  if(!currentUser || currentUser.role!=='admin') return toast('Only admin can add teachers');
+  $('m_tName').value=''; $('m_tPhone').value=''; openModal('addTeacherModal');
+});
+$('cancelAddTeacher').addEventListener('click', ()=> closeModal('addTeacherModal'));
+$('doAddTeacher').addEventListener('click', ()=> {
+  const name = $('m_tName').value.trim(); const phone = $('m_tPhone').value.trim();
+  if(!name || !phone) return toast('Fill fields');
+  teachers.push({name, phone}); setLS(LS_TEACHERS, teachers); closeModal('addTeacherModal'); renderTeachers();
+});
+
+/* =========================
+   Chat
+   ========================= */
+function renderChat(){
+  const box = $('globalChatBox'); box.innerHTML='';
+  chat.forEach(m=>{
+    const d = document.createElement('div'); d.style.padding='6px 8px'; d.style.marginBottom='6px';
+    d.style.borderRadius='8px'; d.style.background = m.user === (currentUser && (currentUser.fullname||currentUser.username)) ? 'linear-gradient(90deg,#60a5fa,#7c3aed)' : 'rgba(255,255,255,0.03)';
+    d.style.color = m.user === (currentUser && (currentUser.fullname||currentUser.username)) ? '#061827' : '#dfefff';
+    d.textContent = `${m.user}: ${m.text}`;
+    box.appendChild(d);
+  });
+  box.scrollTop = box.scrollHeight;
+}
+$('globalChatSend').addEventListener('click', ()=> {
+  const txt = $('globalChatInput').value.trim(); if(!txt) return;
+  const userLabel = currentUser ? (currentUser.fullname || currentUser.username) : 'Guest';
+  chat.push({user: userLabel, text: txt, time: Date.now()});
+  setLS(LS_CHAT, chat); renderChat(); $('globalChatInput').value='';
+});
+renderChat();
+
+/* =========================
+   Online users (multi-tab using localStorage)
+   ========================= */
+function updateOnlineUI(){
+  const onlineNow = getLS(LS_ONLINE, []);
+  $('onlineCount').textContent = onlineNow.length;
+}
+function pushOnline(username){
+  const arr = getLS(LS_ONLINE, []);
+  if(!arr.includes(username)) arr.push(username);
+  setLS(LS_ONLINE, arr);
+  updateOnlineUI();
+}
+function popOnline(username){
+  const arr = getLS(LS_ONLINE, []);
+  const idx = arr.indexOf(username);
+  if(idx >= 0) arr.splice(idx,1);
+  setLS(LS_ONLINE, arr);
+  updateOnlineUI();
+}
+// update across tabs
+window.addEventListener('storage', (e)=> {
+  if(e.key === LS_ONLINE) updateOnlineUI();
+  if(e.key === LS_CHAT) { chat = getLS(LS_CHAT, []); renderChat(); }
+  if(e.key === LS_STUDENTS) { students = getLS(LS_STUDENTS, []); renderStudents(); updateStatsDisplay(); }
+});
+updateOnlineUI();
+
+/* =========================
+   Admin login modal
+   ========================= */
+$('openAdminLogin').addEventListener('click', ()=> openModal('adminModal'));
+$('cancelAdmin').addEventListener('click', ()=> closeModal('adminModal'));
+$('doAdminLogin').addEventListener('click', ()=> {
+  const u = $('adminUser').value.trim(); const p = $('adminPass').value.trim();
+  const admin = users.find(x=> x.role==='admin' && (x.username===u || x.fullname===u || u==='admin'));
+  if(admin && p === admin.password){
+    currentUser = admin; setLS(LS_CURRENT, currentUser); pushOnline(currentUser.username); applyUserToUI(); closeModal('adminModal'); toast('Admin logged in');
+  } else {
+    $('adminErr').style.display='block';
+    setTimeout(()=> $('adminErr').style.display='none', 2000);
+  }
+});
+
+/* =========================
+   Stats modal
+   ========================= */
+$('openStats').addEventListener('click', ()=> {
+  openModal('statsModal'); updateStatsDisplay();
+});
+$('closeStats').addEventListener('click', ()=> closeModal('statsModal'));
+function updateStatsDisplay(){
+  $('st_total').textContent = students.length;
+  $('st_teachers').textContent = teachers.length;
+  $('st_users').textContent = users.length;
+}
+
+/* =========================
+   Apply user to UI (header & side)
+   ========================= */
+function applyUserToUI(){
+  const cur = getLS(LS_CURRENT, null);
+  currentUser = cur;
+  if(cur){
+    $('headerName').textContent = cur.fullname || cur.username;
+    $('headerRole').textContent = (cur.role || 'user').toUpperCase();
+    $('sideName').textContent = cur.fullname || cur.username;
+    $('sideRole').textContent = (cur.role || 'user').toUpperCase();
+    const avatarUrl = cur.avatar || cur.photo || DEFAULT_ADMIN.avatar;
+    $('headerAvatar').querySelector('img').src = avatarUrl;
+    $('sideAvatar').querySelector('img').src = avatarUrl;
+    $('openAuthBtn').textContent = 'Logout';
+    $('openAuthBtn').removeEventListener('click', openAuthModal);
+    $('openAuthBtn').addEventListener('click', userLogout);
+    // allow profile editing for logged users
+  } else {
+    $('headerName').textContent = 'Guest';
+    $('headerRole').textContent = 'VISITOR';
+    $('sideName').textContent = 'Guest';
+    $('sideRole').textContent = 'Visitor';
+    $('headerAvatar').querySelector('img').src = DEFAULT_ADMIN.avatar;
+    $('sideAvatar').querySelector('img').src = DEFAULT_ADMIN.avatar;
+    $('openAuthBtn').textContent = 'Login / Sign up';
+    $('openAuthBtn').removeEventListener('click', userLogout);
+    $('openAuthBtn').addEventListener('click', openAuthModal);
+  }
+  renderStudents(); renderTeachers(); updateStatsDisplay();
+}
+function userLogout(){
+  const cur = getLS(LS_CURRENT, null);
+  if(cur) popOnline(cur.username);
+  localStorage.removeItem(LS_CURRENT);
+  currentUser = null; applyUserToUI();
+  toast('Logged out');
+}
+applyUserToUI();
+
+/* =========================
+   seed students
+   ========================= */
+function seedStudents(n=10){
+  for(let i=0;i<n;i++){
+    const id = 'DEMO-' + Math.floor(Math.random()*100000);
+    students.unshift({id, name:'Demo Student '+(i+1), class: ['1A','2A','3A','4A','5A','6A','7A','8A'][Math.floor(Math.random()*8)], present:false});
+  }
+  setLS(LS_STUDENTS, students);
+  renderStudents();
+}
+
+/* =========================
+   Update stats & storage helpers
+   ========================= */
+function updateStats(){ setLS(LS_STUDENTS, students); setLS(LS_TEACHERS, teachers); setLS(LS_USERS, users); updateStatsDisplay(); }
+function updateOnlineStat(){ setLS(LS_STUDENTS, students); updateStatsDisplay(); }
+
+/* =========================
+   Init render
+   ========================= */
+(function init(){
+  // ensure arrays not null
+  students = students || [];
+  teachers = teachers || [];
+  users = users || [];
+  chat = chat || [];
+  renderStudents();
+  renderTeachers();
+  renderChat();
+  refreshLoginSelect();
+  updateStatsDisplay();
+  updateOnlineUI();
+})();
+
+/* Clean up online list when closing the tab/browser */
+window.addEventListener('beforeunload', ()=> {
+  const cur = getLS(LS_CURRENT, null);
+  if(cur) popOnline(cur.username);
+});
+</script>
+
+</body>
+</html>
